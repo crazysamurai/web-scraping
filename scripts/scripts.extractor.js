@@ -1,4 +1,6 @@
-// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=20 --excel=list.csv --dataFolder=data
+// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=2000 --dataFolder=data --dest=root
+// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=20 --dataFolder=data --dest=root
+// node scripts.extractor.js --dataFolder=data --source=https://www.kudosprime.com/fh4/carlist.php?order=&garage=&cartype=&make=&boost=&rarity=&country=USA&dlc=&bonus=&grid=&range=100
 
 let minimist = require("minimist");
 let axios = require("axios");
@@ -7,6 +9,9 @@ let excel4node = require("excel4node");
 let pdf = require("pdf-lib");
 let fs = require("fs");
 let args = minimist(process.argv);
+let path = require("path");
+let rgb = pdf.rgb;
+// import { rgb } from "pdf-lib";
 
 //download data using axios
 
@@ -47,7 +52,7 @@ responseGiven
       car.price = carPrice[0].textContent.trim();
 
       cars.push(car);
-      // console.log(cars);
+      // console.log(cars.length);
     }
 
     //categorizing cars using their classes
@@ -108,7 +113,7 @@ responseGiven
 
         sheet.column(1).setWidth(70);
         sheet.column(3).setWidth(25);
-        sheet.column(7).setWidth(30);
+        sheet.column(7).setWidth(25);
         sheet.column(4).setWidth(25);
         sheet.column(5).setWidth(25);
         sheet.column(6).setWidth(25);
@@ -182,7 +187,87 @@ responseGiven
           //     }
         }
       }
-      wb.write("excel.xlsx");
+      // wb.write("excel.xlsx");
+    }
+
+    //creating folders
+
+    fs.access("data", function (error) {
+      if (error) {
+        createFolders(horizon);
+
+        function createFolders(horizon) {
+          fs.mkdirSync(args.dataFolder);
+          for (let i = 0; i < horizon.length; i++) {
+            let selectedFolder = path.join(args.dataFolder, horizon[i].name);
+            fs.mkdirSync(selectedFolder);
+            //creating pdf
+            for (let j = 0; j < horizon[i].cars.length; j++) {
+              let carDetailsFile = path.join(
+                selectedFolder,
+                horizon[i].cars[j].x + ".pdf"
+              );
+              createDetailsPage(
+                horizon[i].name,
+                horizon[i].cars[j],
+                carDetailsFile
+              );
+            }
+          }
+        }
+      } else {
+        console.log("Folder already exists.");
+
+        createFolders(horizon);
+
+        function createFolders(horizon) {
+          for (let i = 0; i < horizon.length; i++) {
+            let selectedFolder = path.join(args.dataFolder, horizon[i].name);
+            //creating pdf
+            for (let j = 0; j < horizon[i].cars.length; j++) {
+              let carDetailsFile = path.join(
+                selectedFolder,
+                horizon[i].cars[j].x + ".pdf"
+              );
+              createDetailsPage(
+                horizon[i].name,
+                horizon[i].cars[j],
+                carDetailsFile
+              );
+            }
+          }
+        }
+      }
+    });
+
+    function createDetailsPage(categoryName, car, carDetailsFile) {
+      //generating detailed pdf
+      let category = categoryName;
+      let carName = car.x;
+      let carClass = car.class;
+      let carVal = car.val;
+      let carPow = car.pow;
+      let carWeight = car.weight;
+      let carDrive = car.drive;
+      let carPrice = car.price;
+      let details = carDetailsFile;
+
+      let pdfDocument = pdf.PDFDocument;
+      let templateData = fs.readFileSync("template.pdf"); //no need to use utf-8 because it requires bytes from the file
+      let promiseLoad = pdfDocument.load(templateData);
+      promiseLoad.then(function (pdfDoc) {
+        let page = pdfDoc.getPage(0);
+        page.drawText(category, {
+          x: 700,
+          y: 550,
+          size: 10,
+          color: rgb(239, 65, 118),
+        });
+        let promiseSave = pdfDoc.save();
+        promiseSave.then(function (newTemplateData) {
+          fs.writeFileSync(carDetailsFile, newTemplateData);
+        });
+      });
     }
   })
   .catch(function (err) {
