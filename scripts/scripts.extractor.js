@@ -1,6 +1,6 @@
-// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=2000 --dataFolder=data --dest=root
+// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?order=&garage=&cartype=&make=&boost=&country=Germany&dlc=&bonus=&grid=&range=2000 --dataFolder=data --dest=root
 // node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=20 --dataFolder=data --dest=root
-// node scripts.extractor.js --dataFolder=data --source=https://www.kudosprime.com/fh4/carlist.php?order=&garage=&cartype=&make=&boost=&rarity=&country=USA&dlc=&bonus=&grid=&range=100
+// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=2000 --dataFolder=data --dest=root
 
 let minimist = require("minimist");
 let axios = require("axios");
@@ -10,8 +10,7 @@ let pdf = require("pdf-lib");
 let fs = require("fs");
 let args = minimist(process.argv);
 let path = require("path");
-let rgb = pdf.rgb;
-// import { rgb } from "pdf-lib";
+const { rgb } = require("pdf-lib");
 
 //download data using axios
 
@@ -52,8 +51,14 @@ responseGiven
       car.price = carPrice[0].textContent.trim();
 
       cars.push(car);
-      // console.log(cars.length);
     }
+    //removing the ▲ symbol because it can't be written in pdf
+    for (let y = 0; y < cars.length; y++) {
+      let str = cars[y].x;
+      str = str.replace(/▲/g, "");
+      cars[y].x = str;
+    }
+    // console.log(cars);
 
     //categorizing cars using their classes
 
@@ -91,8 +96,8 @@ responseGiven
 
     //writing classified list in a json file
 
-    // let horizonJson = JSON.stringify(horizon);
-    // fs.writeFileSync("horizon.json", horizonJson, "utf-8");
+    let horizonJson = JSON.stringify(horizon);
+    fs.writeFileSync("horizon.json", horizonJson, "utf-8");
 
     // writing in excel file
 
@@ -187,7 +192,7 @@ responseGiven
           //     }
         }
       }
-      // wb.write("excel.xlsx");
+      wb.write("excel.xlsx");
     }
 
     //creating folders
@@ -223,6 +228,7 @@ responseGiven
         function createFolders(horizon) {
           for (let i = 0; i < horizon.length; i++) {
             let selectedFolder = path.join(args.dataFolder, horizon[i].name);
+            fs.mkdirSync(selectedFolder);
             //creating pdf
             for (let j = 0; j < horizon[i].cars.length; j++) {
               let carDetailsFile = path.join(
@@ -261,7 +267,49 @@ responseGiven
           x: 700,
           y: 550,
           size: 10,
-          color: rgb(239, 65, 118),
+          color: rgb(0.9, 0.3, 0.5),
+        });
+        page.drawText(carClass, {
+          x: 570,
+          y: 370,
+          size: 18,
+          color: rgb(0.85, 0.1, 0.58),
+        });
+        page.drawText(carVal, {
+          x: 570,
+          y: 335,
+          size: 18,
+          color: rgb(0.85, 0.1, 0.58),
+        });
+        page.drawText(carPow, {
+          x: 570,
+          y: 305,
+          size: 18,
+          color: rgb(0.94, 0.52, 0.01),
+        });
+        page.drawText(carWeight, {
+          x: 570,
+          y: 270,
+          size: 18,
+          color: rgb(0.94, 0.52, 0.01),
+        });
+        page.drawText(carDrive, {
+          x: 570,
+          y: 240,
+          size: 18,
+          color: rgb(0.94, 0.52, 0.01),
+        });
+        page.drawText(carPrice + " " + "CR", {
+          x: 570,
+          y: 210,
+          size: 18,
+          color: rgb(0.01, 0.65, 0.47),
+        });
+        page.drawText(carName, {
+          x: 70,
+          y: 450,
+          size: 18,
+          color: rgb(0.7, 0.85, 0.32),
         });
         let promiseSave = pdfDoc.save();
         promiseSave.then(function (newTemplateData) {
