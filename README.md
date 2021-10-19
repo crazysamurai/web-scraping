@@ -59,15 +59,15 @@ The json file generated is also located under scripts folder along with the spre
 
 ## Color Reference for Spreadsheet
 
-| Vehicle Class | Hex                                                              |
+| Vehicle Class | Performance Index                                                              |
 | ------------- | ---------------------------------------------------------------- |
-| C             | ![#e5c30c](https://via.placeholder.com/10/e5c30c?text=+) #e5c30c |
-| D             | ![#41b068](https://via.placeholder.com/10/41b068?text=+) #41b068 |
-| B             | ![#FF7A08](https://via.placeholder.com/10/FF7A08?text=+) #FF7A08 |
-| A             | ![#C2070F](https://via.placeholder.com/10/C2070F?text=+) #C2070F |
-| S1            | ![#806AF0](https://via.placeholder.com/10/806AF0?text=+) #806AF0 |
-| S2            | ![#0008EE](https://via.placeholder.com/10/0008EE?text=+) #0008EE |
-| X             | ![#AEF21B](https://via.placeholder.com/10/AEF21B?text=+) #AEF21B |
+| C             | ![#e5c30c](https://via.placeholder.com/10/e5c30c?text=+) 500-599 |
+| D             | ![#41b068](https://via.placeholder.com/10/41b068?text=+) 100-499 |
+| B             | ![#FF7A08](https://via.placeholder.com/10/FF7A08?text=+) 600-699 |
+| A             | ![#C2070F](https://via.placeholder.com/10/C2070F?text=+) 700-799 |
+| S1            | ![#806AF0](https://via.placeholder.com/10/806AF0?text=+) 800-899 |
+| S2            | ![#0008EE](https://via.placeholder.com/10/0008EE?text=+) 900-998 |
+| X             | ![#AEF21B](https://via.placeholder.com/10/AEF21B?text=+) 999  |
 
 ## Tech Stack
 
