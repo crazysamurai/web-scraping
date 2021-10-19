@@ -1,4 +1,3 @@
-// node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?order=&garage=&cartype=&make=&boost=&country=Germany&dlc=&bonus=&grid=&range=2000 --dataFolder=data --dest=root
 // node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=20 --dataFolder=data --dest=root
 // node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=2000 --dataFolder=data --dest=root
 
@@ -56,6 +55,8 @@ responseGiven
     for (let y = 0; y < cars.length; y++) {
       let str = cars[y].x;
       str = str.replace(/▲/g, "");
+      str = str.replace(/"THE MACHINE"/g, ""); // to remove "" in the string
+      str = str.replace("/", "");
       cars[y].x = str;
     }
     // console.log(cars);
@@ -205,7 +206,7 @@ responseGiven
           fs.mkdirSync(args.dataFolder);
           for (let i = 0; i < horizon.length; i++) {
             let selectedFolder = path.join(args.dataFolder, horizon[i].name);
-            fs.mkdirSync(selectedFolder);
+            fs.mkdirSync(selectedFolder, { recursive: true });
             //creating pdf
             for (let j = 0; j < horizon[i].cars.length; j++) {
               let carDetailsFile = path.join(
@@ -228,7 +229,11 @@ responseGiven
         function createFolders(horizon) {
           for (let i = 0; i < horizon.length; i++) {
             let selectedFolder = path.join(args.dataFolder, horizon[i].name);
-            fs.mkdirSync(selectedFolder);
+            fs.access(selectedFolder, function (err) {
+              if (err) {
+                fs.mkdirSync(selectedFolder);
+              }
+            });
             //creating pdf
             for (let j = 0; j < horizon[i].cars.length; j++) {
               let carDetailsFile = path.join(
@@ -263,6 +268,7 @@ responseGiven
       let promiseLoad = pdfDocument.load(templateData);
       promiseLoad.then(function (pdfDoc) {
         let page = pdfDoc.getPage(0);
+
         page.drawText(category, {
           x: 700,
           y: 550,
@@ -311,10 +317,19 @@ responseGiven
           size: 18,
           color: rgb(0.7, 0.85, 0.32),
         });
+
         let promiseSave = pdfDoc.save();
-        promiseSave.then(function (newTemplateData) {
-          fs.writeFileSync(carDetailsFile, newTemplateData);
-        });
+        promiseSave
+          .then(function (newTemplateData) {
+            fs.writeFileSync(details, newTemplateData, function (err) {
+              if (err) {
+                console.log(err);
+              }
+            });
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
       });
     }
   })
