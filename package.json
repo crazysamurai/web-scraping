@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": ">=0.21.2",
     "excel4node": "^1.7.2",
     "jsdom": "^17.0.0",
     "minimist": "^1.2.5",
-    "pdf-lib": "^1.16.0"
+    "pdf-lib": "^1.16.0",
+    "jszip": ">=3.7.0"
   },
   "devDependencies": {},
   "scripts": {

@@ -45,17 +45,17 @@ The json file generated is also located under scripts folder along with the spre
 
 ## Screenshots
 
-![App Screenshot](./images/directory.jpg)
+![App Screenshot](/images/directory.jpg)
 
-![App Screenshot]()
+![App Screenshot](/images/folders.png)
 
-![App Screenshot]()
+![App Screenshot](/images/pdfs.png)
 
-![App Screenshot]()
+![App Screenshot](/images/pdf.png)
 
-![App Screenshot]()
+![App Screenshot](/images/json.png)
 
-![App Screenshot]()
+![App Screenshot](/images/excel.png)
 
 ## Color Reference for Spreadsheet
 
