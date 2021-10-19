@@ -45,7 +45,7 @@ The json file generated is also located under scripts folder along with the spre
 
 ## Screenshots
 
-![App Screenshot](./images/directory.jpg)
+![App Screenshot](/images/directory.jpg)
 
 ![App Screenshot]()
 
