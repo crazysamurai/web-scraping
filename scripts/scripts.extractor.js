@@ -1,3 +1,5 @@
+// Following commands are to be pasted in console. The first command generates the result for 20 cars while second one does the same for all the cars available on the website.
+// Please make sure the website is online.
 // node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=20 --dataFolder=data --dest=root
 // node scripts.extractor.js --source=https://www.kudosprime.com/fh4/carlist.php?range=2000 --dataFolder=data --dest=root
 
